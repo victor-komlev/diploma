@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+
+
+
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://cxf.apache.org/jaxws
+        http://cxf.apache.org/schemas/jaxws.xsd
+        http://cxf.apache.org/jaxrs
+        http://cxf.apache.org/schemas/jaxrs.xsd
+        http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+    ">
+
+
+	<!-- <import resource="classpath:META-INF/cxf/cxf.xml"/> -->
+	<!-- <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/> -->
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.vkomlev.diploma.stats.services" />
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>file:${catalina.home}/conf/stats/application.properties</value>
+			</list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+	<jaxws:endpoint id="helloWorld" implementor="com.vkomlev.diploma.stats.StatsServiceImpl"
+		address="/HelloWorld" />
+
+
+	<jaxrs:server id="lightWeightEmployeeService" address="/restapi">
+		<jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+			<bean class="com.vkomlev.diploma.stats.webservices.DefaultExceptionMapper" />
+		</jaxrs:providers>
+		<jaxrs:serviceBeans>
+			<ref bean="employeeServiceImpl" />
+		</jaxrs:serviceBeans>
+		<jaxrs:extensionMappings>
+			<entry key="json" value="application/json" />
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg>
+			<bean class="com.mongodb.MongoClient">
+				<constructor-arg value="${db.mongo.host}" />
+				<constructor-arg value="${db.mongo.port}" />
+			</bean>
+		</constructor-arg>
+		<constructor-arg value="database" />
+	</bean>
+
+	<mongo:repositories base-package="com.vkomlev.diploma.stats.repositories"
+		mongo-template-ref="mongoTemplate" />
+
+	<bean id="employeeServiceImpl" class="com.vkomlev.diploma.stats.webservices.EmployeeServiceImpl" />
+
+
+
+</beans>
