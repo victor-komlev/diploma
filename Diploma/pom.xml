@@ -11,6 +11,8 @@
 	<properties>
 		<cxf.version>3.1.6</cxf.version>
 		<spring.version>4.2.5.RELEASE</spring.version>
+		<org.projectreactor-version>2.0.7.RELEASE</org.projectreactor-version>
+		<jackson-version>2.6.3</jackson-version>
 	</properties>
 
 	<dependencies>
@@ -62,7 +64,29 @@
 			<artifactId>spring-data-mongodb</artifactId>
 			<version>1.9.1.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
+
+		<!-- SPRING REACTOR -->
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+			<version>${org.projectreactor-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-bus</artifactId>
+			<version>${org.projectreactor-version}</version>
+		</dependency>
 
 		<!-- MONGO -->
 		<dependency>
@@ -77,7 +101,11 @@
 			<artifactId>jackson-jaxrs</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
 		<!-- JAVAX -->
 
 		<!--LOGGING -->

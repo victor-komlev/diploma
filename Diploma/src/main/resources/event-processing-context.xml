@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:annotation-config />
+	<bean id="eventBusManager"
+		class="com.mera.cs.eventprocessing.notification.internal.InternalEventBusManager"
+		scope="singleton">
+		<property name="inputThreadpoolSize" value="1" />
+		<property name="inputQueueSize" value="100" />
+		<property name="routingThreadpoolSize" value="1" />
+		<property name="routingQueueSize" value="100" />
+		<property name="busList">
+			<list>
+				<value>COMPANY</value>
+				<value>EMPLOYEE</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="topicHelper" class="com.vkomlev.diploma.stats.eventprocessing.TopicLookupHelper" />
+
+	<bean id="subscriptionManager"
+		class="com.mera.cs.eventprocessing.notification.internal.InternalSubscriptionManager"
+		scope="singleton" />
+
+	<bean id="manager"
+		class="com.mera.cs.eventprocessing.client.websocket.WebSocketConnectionManager"
+		scope="singleton" />
+	<bean id="objectMapper" class="com.mera.cs.eventprocessing.client.websocket.messages.MyOwnObjectMapper"
+		scope="singleton" />
+	<bean id="notificationProducer"
+		class="com.mera.cs.eventprocessing.notification.internal.InternalNotificationProducer"
+		scope="singleton" />
+
+</beans>

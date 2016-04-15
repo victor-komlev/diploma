@@ -9,4 +9,6 @@ import com.vkomlev.diploma.stats.entities.Employee;
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
 
     Employee getEmployeeByName(String name);
+
+    Employee getEmployeeById(String id);
 }

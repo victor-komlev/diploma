@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xmlns:jaxrs-client="http://cxf.apache.org/jaxrs-client" xmlns:util="http://www.springframework.org/schema/util"
+
+
+
+
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://cxf.apache.org/jaxrs
+        http://cxf.apache.org/schemas/jaxrs.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.0.xsd
+        http://cxf.apache.org/jaxrs-client
+        http://cxf.apache.org/schemas/jaxrs-client.xsd
+        ">
+
+
+	<!-- <import resource="classpath:META-INF/cxf/cxf.xml"/> -->
+	<!-- <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/> -->
+	<context:property-placeholder location="classpath*:/application.properties" />
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.vkomlev.diploma.services" />
+
+	<jaxrs-client:client id="restClient"
+		address="http://localhost:8080/main-stats-unit/restapi" serviceClass="com.vkomlev.diploma.services.EmployeeService">
+		<jaxrs-client:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+		</jaxrs-client:providers>
+		<jaxrs-client:headers>
+			<entry key="Accept" value="application/json"></entry>
+		</jaxrs-client:headers>
+	</jaxrs-client:client>
+
+
+</beans>
