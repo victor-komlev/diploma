@@ -28,7 +28,7 @@
 	<context:component-scan base-package="com.vkomlev.diploma.services" />
 
 	<jaxrs-client:client id="restClient"
-		address="http://localhost:8080/main-stats-unit/restapi" serviceClass="com.vkomlev.diploma.services.EmployeeService">
+		address="http://185.117.152.251:8080/main-stats-unit/restapi" serviceClass="com.vkomlev.diploma.services.EmployeeService">
 		<jaxrs-client:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
 		</jaxrs-client:providers>
