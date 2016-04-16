@@ -3,7 +3,7 @@
 var app = window.angular.module('Stats', ["Stats.Notification", "chart.js"]);
 
 app.run(["NotificationService", function (NotificationService) {
-    NotificationService.connect("localhost:8080");
+    NotificationService.connect("185.117.152.251:8080");
 }]);
 
 app.controller('TaskStatsCntrl', ['$scope', '$timeout', '$rootScope', function ($scope, $timeout, $rootScope) {

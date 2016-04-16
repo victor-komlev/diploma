@@ -22,29 +22,38 @@
                     if (messageObject.route == "EMPLOYEE") {
                         var taskStats = [];
                         for (var employeeTime in messageObject.employeesTaskTimeAverage) {
-                            taskStats.push({
-                                "employee": messageObject.employeesTaskTimeAverage[employeeTime].employeeName,
-                                "value": messageObject.employeesTaskTimeAverage[employeeTime].avgTime
-                            });
+                            if (messageObject.employeesTaskTimeAverage != null && messageObject.employeesTaskTimeAverage[employeeTime] != null) {
+                                taskStats.push({
+                                    "employee": messageObject.employeesTaskTimeAverage[employeeTime].employeeName,
+                                    "value": messageObject.employeesTaskTimeAverage[employeeTime].avgTime
+                                });
+                            }
                         }
                         $rootScope.$broadcast("EmployeeTaskAvg", taskStats);
                         var actionStats = [];
                         for (var employeeTime in messageObject.employeesAverageActionTime) {
-                            actionStats.push({
-                                "actionType" : messageObject.employeesAverageActionTime[employeeTime].actionType,
-                                "employee": messageObject.employeesAverageActionTime[employeeTime].employeeName,
-                                "value": messageObject.employeesAverageActionTime[employeeTime].avgTime
-                            });
+                            if (messageObject.employeesAverageActionTime != null && messageObject.employeesAverageActionTime[employeeTime] != null) {
+
+                                actionStats.push({
+                                    "actionType": messageObject.employeesAverageActionTime[employeeTime].actionType,
+                                    "employee": messageObject.employeesAverageActionTime[employeeTime].employeeName,
+                                    "value": messageObject.employeesAverageActionTime[employeeTime].avgTime
+                                });
+                            }
                         }
                         $rootScope.$broadcast("EmployeeActionAvg", actionStats);
 
-                    } else if (messageObject.route == "COMPANY") {
+                    }
+                    else if (messageObject.route == "COMPANY") {
                         var actionStats = [];
                         for (var itemId in messageObject.perActionAverageTimes) {
-                            actionStats.push({
-                                "actionType": messageObject.perActionAverageTimes[itemId]._id,
-                                "value": messageObject.perActionAverageTimes[itemId].avgTime
-                            });
+                            if (messageObject.perActionAverageTimes != null && messageObject.perActionAverageTimes[itemId] != null) {
+
+                                actionStats.push({
+                                    "actionType": messageObject.perActionAverageTimes[itemId]._id,
+                                    "value": messageObject.perActionAverageTimes[itemId].avgTime
+                                });
+                            }
                         }
                         $rootScope.$broadcast("CompanyActionAvg", actionStats);
 
@@ -72,6 +81,9 @@
                 connect: connect,
                 disconnect: disconnect
             };
-        }]);
+        }
+    ])
+    ;
 
-})();
+})
+();

@@ -78,10 +78,11 @@ public class MainStatsProcessingService {
     public EmployeesAverageActionTime getEmployeesAverageTimeForActionType(String employeeId, String actionType) {
         EmployeesAverageActionTime result = null;
         try {
-            Aggregation agg = newAggregation(match(Criteria.where("type").is(actionType).and("performerEmployeeId").is(employeeId)),
-                    lookup("employee", "performerEmployeeId", "_id", "employee"),
-                    unwind("employee"),
-                    group("performerEmployeeId").avg("timeTaken").as("avgTime").first("employee.name").as("employeeName").first("type").as("actionType"));
+            Aggregation agg = newAggregation(
+                    match(Criteria.where("type").is(actionType).and("performerEmployeeId").is(employeeId)),
+                    lookup("employee", "performerEmployeeId", "_id", "employee"), unwind("employee"),
+                    group("performerEmployeeId").avg("timeTaken").as("avgTime").first("employee.name")
+                            .as("employeeName").first("type").as("actionType"));
             AggregationResults<EmployeesAverageActionTime> groupResults = mongo.aggregate(agg, SingleAction.class,
                     EmployeesAverageActionTime.class);
             result = groupResults.getUniqueMappedResult();
@@ -111,8 +112,7 @@ public class MainStatsProcessingService {
             Aggregation agg = newAggregation(match(Criteria.where("ownerId").is(employeeId)),
                     lookup("singleAction", "_id", "parentTaskId", "action"), unwind("action"),
                     group("action.parentTaskId").sum("action.timeTaken").as("totalTime").first("ownerId").as("ownerId"),
-                    lookup("employee", "ownerId", "_id", "employee"),
-                    unwind("employee"),
+                    lookup("employee", "ownerId", "_id", "employee"), unwind("employee"),
                     group("ownerId").avg("totalTime").as("avgTime").first("employee.name").as("employeeName"));
             AggregationResults<EmployeesTaskTimeAverage> groupResults = mongo.aggregate(agg, Task.class,
                     EmployeesTaskTimeAverage.class);
@@ -147,11 +147,18 @@ public class MainStatsProcessingService {
         employeeEvent.setEmployeesTaskTimeAverage(perEmployeeTaskTimes);
         for (Employee employee : employees) {
             for (ActionType actionType : Arrays.asList(ActionType.values())) {
-                perEmployeeActionTimes
-                        .add(getEmployeesAverageTimeForActionType(employee.getId(), actionType.toString()));
+                EmployeesAverageActionTime employeesAverageActionTime = getEmployeesAverageTimeForActionType(
+                        employee.getId(), actionType.toString());
+                if (employeesAverageActionTime != null) {
+                    perEmployeeActionTimes.add(employeesAverageActionTime);
+                }
             }
-            perEmployeeTaskTimes.add(getEmployeesTaskAverageTime(employee.getId()));
+            EmployeesTaskTimeAverage employeesTaskTimeAverage = getEmployeesTaskAverageTime(employee.getId());
+            if (employeesTaskTimeAverage != null) {
+                perEmployeeTaskTimes.add(employeesTaskTimeAverage);
+            }
         }
+        LOG.info("Sending event to publisher : {}", employeeEvent);
         publisher.publishEvent(employeeEvent);
 
         CompanyBroadcastEvent companyEvent = new CompanyBroadcastEvent();
@@ -159,8 +166,12 @@ public class MainStatsProcessingService {
         List<ActionAverageTime> actionAverageTimes = new ArrayList<>();
         companyEvent.setPerActionAverageTimes(actionAverageTimes);
         for (ActionType actionType : Arrays.asList(ActionType.values())) {
-            actionAverageTimes.add(getAverageTimeForActionType(actionType.toString()));
+            ActionAverageTime actionAverageTime = getAverageTimeForActionType(actionType.toString());
+            if (actionAverageTime != null) {
+                actionAverageTimes.add(actionAverageTime);
+            }
         }
+        LOG.info("Sending event to publisher : {}", employeeEvent);
         publisher.publishEvent(companyEvent);
     }
 

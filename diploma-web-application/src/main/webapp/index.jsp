@@ -21,8 +21,6 @@
 	src="app/Notifications/NotificationModule.js"></script>
 <script type="text/javascript"
 	src="app/Notifications/NotificationServices.js"></script>
-<script type="text/javascript" src="app/Storage/StorageModule.js"></script>
-<script type="text/javascript" src="app/Storage/StorageServices.js"></script>
 
 <script src="app/app.js"></script>
 <!-- <script src="app/services.js"></script> -->
